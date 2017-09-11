@@ -35,6 +35,23 @@ public class StandardLambdaObject implements Serializable {
 	 */
 	private StandardConsumingLamda	lamdaImplementation;
 	
+	private String					lambdaJSScript;
+	
+	/**
+	 * @return the lambdaJSScript
+	 */
+	public String getLambdaJSScript() {
+		return this.lambdaJSScript;
+	}
+	
+	/**
+	 * @param lambdaJSScript
+	 *            the lambdaJSScript to set
+	 */
+	public void setLambdaJSScript(String lambdaJSScript) {
+		this.lambdaJSScript = lambdaJSScript;
+	}
+	
 	/**
 	 * 
 	 */
@@ -72,6 +89,19 @@ public class StandardLambdaObject implements Serializable {
 	 */
 	public void setLamdaImplementation(StandardConsumingLamda lamdaImplementation) {
 		this.lamdaImplementation = lamdaImplementation;
+	}
+	
+	/**
+	 * Just a method that is meant to be called from a JS script, to simulate
+	 * the transport of lambdas(:D)
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public void toBeCalledFromWithMyScript(String message) {
+		
+		System.out.println("This is being called from within the script with the message:: " + message);
+		System.out.println("Over and out!\n\n\n");
 	}
 	
 	/*

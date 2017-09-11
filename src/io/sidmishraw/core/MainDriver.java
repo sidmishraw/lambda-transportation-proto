@@ -8,11 +8,17 @@
  */
 package io.sidmishraw.core;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * @author sidmishraw
@@ -34,10 +40,44 @@ public class MainDriver {
 		StandardLambdaObject sObject = new StandardLambdaObject();
 		
 		sObject.setObjectId("Sid#0001");
-		sObject.setLamdaImplementation(() -> {
+		
+		// java8 lambda
+		// sObject.setLamdaImplementation(() -> {
+		//
+		// System.out.println("FROM Inside Lambda:: Kangaroo!#001's lambda is
+		// executing");
+		// });
+		
+		StringBuffer scriptContentBuffer = new StringBuffer();
+		
+		try (BufferedReader bReader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(Paths.get("lamda.js").toFile())))) {
 			
-			System.out.println("FROM Inside Lambda:: Kangaroo!#001's lambda is executing");
-		});
+			String line = null;
+			
+			while (null != (line = bReader.readLine())) {
+				
+				scriptContentBuffer.append(line);
+			}
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		// set the js script as the new lambda as a transport(?)
+		sObject.setLambdaJSScript(scriptContentBuffer.toString());
+		
+		// StringBuffer sBuffer = new StringBuffer();
+		//
+		// sBuffer.append("function displayTo(msg){");
+		// sBuffer.append("print('From inside the JS Script:: ' + msg)");
+		// sBuffer.append("}");
+		// sBuffer.append("");
+		// sBuffer.append("displayTo('" + "objectId :: " + sObject.getObjectId()
+		// + "')");
+		//
+		// // using the JS script to define behavior
+		// sObject.setLambdaJSScript(sBuffer.toString());
 		
 		System.out.println("Writing the object to file");
 		
@@ -51,13 +91,13 @@ public class MainDriver {
 		
 		System.out.println("Wrote the object to file! Now sleeping for 30s");
 		
-		try {
-			
-			Thread.sleep(30000);
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
+		// try {
+		//
+		// Thread.sleep(30000);
+		// } catch (InterruptedException e) {
+		//
+		// e.printStackTrace();
+		// }
 	}
 	
 	/**
@@ -84,9 +124,17 @@ public class MainDriver {
 				
 				System.out.println("Read in the object with the object Id:" + sObject.getObjectId());
 				
-				System.out.println("Executing the object's lambda");
+				// System.out.println("Executing the object's lambda");
+				//
+				// try {
+				//
+				// sObject.getLamdaImplementation().run();
+				// } catch (Exception e) {
+				//
+				// e.printStackTrace();
+				// }
 				
-				sObject.getLamdaImplementation().run();
+				scriptIt(sObject.getLambdaJSScript());
 				
 				System.out.println("Lambda execution complete");
 			} catch (Exception e) {
@@ -100,12 +148,42 @@ public class MainDriver {
 	}
 	
 	/**
+	 * Evaluates the script
+	 * 
+	 * @param script
+	 *            the script to be executed
+	 * @throws ScriptException
+	 * 
+	 * @return the result of the evaluation
+	 */
+	private static Object scriptIt(String script) throws ScriptException {
+		
+		ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+		
+		// list of all registered scripting engines supported by default
+		// Oracle Nashhorn for javascript
+		// scriptEngineManager.getEngineFactories().forEach(fac -> {
+		//
+		// System.out.println(fac.getEngineName());
+		// System.out.println(fac.getLanguageName());
+		// });
+		
+		ScriptEngine jsEngine = scriptEngineManager.getEngineByName("js");
+		
+		Object result = jsEngine.eval(script);
+		
+		return result;
+	}
+	
+	/**
 	 * @param args
 	 *            the command line args
 	 */
 	public static void main(String[] args) {
 		
 		System.out.println("Args length = " + args.length);
+		
+		System.out.println("Testing out ScriptEngineClass");
 		
 		if (args.length < 2) {
 			
