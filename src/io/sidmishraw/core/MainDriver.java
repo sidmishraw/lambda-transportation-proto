@@ -36,7 +36,7 @@ public class MainDriver {
 		sObject.setObjectId("Sid#0001");
 		sObject.setLamdaImplementation(() -> {
 			
-			System.out.println("FROM Inside Lambda:: Sid#001's lambda is executing");
+			System.out.println("FROM Inside Lambda:: Kangaroo!#001's lambda is executing");
 		});
 		
 		System.out.println("Writing the object to file");
@@ -74,7 +74,7 @@ public class MainDriver {
 			
 			// first sleep for 60s, giving enough time for the creator to create
 			// the serialized object.
-			Thread.sleep(60000);
+			// Thread.sleep(60000);
 			
 			System.out.println("Starting!...");
 			
@@ -86,14 +86,14 @@ public class MainDriver {
 				
 				System.out.println("Executing the object's lambda");
 				
-				sObject.getLamdaImplementation().execute();
+				sObject.getLamdaImplementation().run();
 				
 				System.out.println("Lambda execution complete");
 			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}

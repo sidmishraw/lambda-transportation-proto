@@ -17,7 +17,6 @@ import java.io.Serializable;
  *
  */
 @FunctionalInterface
-public interface StandardConsumingLamda extends Serializable {
+public interface StandardConsumingLamda extends Runnable, Serializable {
 	
-	public void execute();
 }
